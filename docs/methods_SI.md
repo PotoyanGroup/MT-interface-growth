@@ -35,7 +35,7 @@ $$
 D_\mathrm{surf} = \frac{1}{\eta_\mathrm{eff}}.
 $$
 
-High interface viscosity therefore simultaneously slows lateral redistribution of surface tubulin and reduces the adsorption flux from bulk. The PDE is integrated numerically using an exact exponential relaxation for the adsorption term and an explicit finite-difference scheme for the diffusion term, with adaptive substeps to satisfy the stability condition $D_\mathrm{surf}\,\Delta t / \Delta x^2 \leq 0.2$. MT dynamics are simulated as a continuous-time Gillespie (next-reaction) process with three classes of events: nucleation, growth, and tip detachment (peeling).
+High interface viscosity therefore slows lateral redistribution of surface tubulin; the bulk adsorption flux $k_\mathrm{ads} = k_0^\mathrm{ads} D_\mathrm{3D}/R$ is independent of $\eta_\mathrm{eff}$. The PDE is integrated numerically using an exact exponential relaxation for the adsorption term and an explicit finite-difference scheme for the diffusion term, with adaptive substeps to satisfy the stability condition $D_\mathrm{surf}\,\Delta t / \Delta x^2 \leq 0.2$. MT dynamics are simulated as a continuous-time Gillespie (next-reaction) process with three classes of events: nucleation, growth, and tip detachment (peeling).
 
 **Nucleation.** The global nucleation rate is
 
@@ -80,10 +80,10 @@ where $L_p$ is the MT persistence length. Free tips use a fixed noise $\sigma_\m
 The rate at which a surface-bound tip detaches follows Kramers' escape theory modified by a length-dependent force gate (Bell–Evans model):
 
 $$
-k_\mathrm{off}(L) = k_0^\mathrm{off}\,e^{-\eta_\mathrm{eff}}\,\sigma\!\left(\frac{L/R - \ell_\mathrm{thresh}}{w_\mathrm{thresh}}\right),
+k_\mathrm{off}(L) = k_0^\mathrm{off}\,e^{-\eta_\mathrm{eff}}\,\sigma\!\left(\frac{L/R - n_\mathrm{thresh}}{w_\mathrm{thresh}}\right),
 $$
 
-where $\sigma(\cdot)$ is the logistic function, $L$ is the current MT contour length, and $\ell_\mathrm{thresh}$, $w_\mathrm{thresh}$ set the length scale and width of the detachment gate. The factor $e^{-\eta_\mathrm{eff}}$ is the Kramers barrier: denser, more cohesive interfaces (high $\eta_\mathrm{eff}$, corresponding to RGRGG-type sequences) exponentially suppress tip peeling, while low-viscosity interfaces (KGKGG-type) allow spontaneous detachment. Long MTs accumulate bending stress at the contact zone, progressively lowering the effective barrier and triggering peeling.
+where $\sigma(\cdot)$ is the logistic function, $L$ is the current MT contour length, and $n_\mathrm{thresh}$, $w_\mathrm{thresh}$ set the length scale and width of the detachment gate. The factor $e^{-\eta_\mathrm{eff}}$ is the Kramers barrier: denser, more cohesive interfaces (high $\eta_\mathrm{eff}$, corresponding to RGRGG-type sequences) exponentially suppress tip peeling, while low-viscosity interfaces (KGKGG-type) allow spontaneous detachment. Long MTs accumulate bending stress at the contact zone, progressively lowering the effective barrier and triggering peeling.
 
 
 
@@ -121,7 +121,7 @@ All simulations in this work used the parameter values listed below unless other
 | $\sigma_\mathrm{free}$ | Angular noise for free tips (rad) | 0.05 |
 | **Tip detachment** | | |
 | $k_0^\mathrm{off}$ | Basal detachment rate (s⁻¹) | 0.005 |
-| $\ell_\mathrm{thresh}$ | Length gate threshold ($L/R$) | 0.30 |
+| $n_\mathrm{thresh}$ | Length gate threshold ($L/R$) | 0.30 |
 | $w_\mathrm{thresh}$ | Length gate width ($L/R$) | 0.30 |
 | **Numerics** | | |
 | $N_\mathrm{MT}^\mathrm{max}$ | Maximum MTs per droplet | 28 |
