@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mttoy"
+version = "0.1.0"
+description = "Minimal microtubule-on-condensate growth model (Gillespie/PDMP)"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+dependencies = [
+    "numpy>=1.23",
+    "pandas>=1.5",
+    "matplotlib>=3.6",
+    "Pillow>=9.0",
+]
+
+[project.urls]
+Repository = "https://github.com/YOUR_ORG/mttoy"
+
+[tool.setuptools]
+packages = ["mttoy"]
