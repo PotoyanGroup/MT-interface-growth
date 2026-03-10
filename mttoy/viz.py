@@ -335,24 +335,25 @@ def draw_schematic(
     """
     import matplotlib.patches as mpatches
 
-    C_DROP = "#dce8f5"
-    C_BULK = "#f7f3ea"
-    C_SURF = "#2a7fff"
-    C_FREE = "#ff6b1a"
-    C_NUC  = "#2ca02c"
-    C_ADS  = "#9467bd"
-    C_DIFF = "#17becf"
-    C_PEEL = "#c0392b"
+    C_DROP = "#dbeafe"       # soft sky-blue — droplet interior
+    C_BULK = "#fafaf8"       # near-white warm — bulk region
+    C_SURF = "#1f78b4"       # strong blue — surface-bound MT / density
+    C_FREE = "#e6550d"       # burnt orange — free (escaped) MT
+    C_NUC  = "#31a354"       # forest green — nucleation
+    C_ADS  = "#984ea3"       # deep purple — adsorption
+    C_DIFF = "#08888a"       # teal — surface diffusion
+    C_PEEL = "#b2182b"       # deep red — tip peeling
 
-    FS  = 11.5
-    FSL = 13
-    ARROW_KW = dict(arrowstyle="-|>", mutation_scale=16, lw=2.0)
+    FS  = 16
+    FSL = 18
+    ARROW_KW = dict(arrowstyle="-|>", mutation_scale=18, lw=2.2)
 
+    plt.rcParams["font.family"] = "Arial"
     fig, ax = plt.subplots(figsize=(11, 9))
     ax.set_aspect("equal")
     ax.axis("off")
     ax.set_xlim(-1.55, 1.65)
-    ax.set_ylim(-1.45, 1.55)
+    ax.set_ylim(-1.45, 1.48)
 
     R = 0.50
 
@@ -365,16 +366,16 @@ def draw_schematic(
     ax.add_patch(plt.Circle((0, 0), R,   color=C_DROP, zorder=1, lw=2.2, ec="#3a6ea8"))
 
     # region labels
-    ax.text(0, -0.10, "Condensate\ndroplet", ha="center", va="center",
+    ax.text(0, -0.05, "Condensate\ndroplet", ha="center", va="center",
             fontsize=FSL, color="#3a5a80", style="italic", zorder=5)
-    ax.text(-1.40, 1.32, r"Bulk ($c_\mathrm{bulk},\;D_\mathrm{3D}$)",
-            ha="left", va="center", fontsize=FSL, color="#7a6020", zorder=5)
+    ax.text(0, 1.38, r"Dilute phase ($c_\mathrm{dilute},\;D_\mathrm{3D}$)",
+            ha="center", va="center", fontsize=FSL, color="#7a6020", zorder=5)
 
     # 1. surface tubulin dots
     for th in np.concatenate([np.linspace(95, 172, 18), np.linspace(188, 265, 18)]):
         ax.plot(*pt(th, R), 'o', ms=4.5, color=C_SURF, alpha=0.55, zorder=3)
     ps = pt(225, R + 0.12)
-    ax.text(ps[0], ps[1] - 0.04, r"$n(\mathbf{u},t)$",
+    ax.text(ps[0] - 0.08, ps[1] + 0.10, r"$n(\mathbf{u},t)$",
             ha="center", va="top", fontsize=FS, color=C_SURF,
             fontweight="bold", zorder=6)
 
@@ -410,7 +411,7 @@ def draw_schematic(
     # 4. nucleation star (268°)
     p_nuc = pt(268, R)
     ax.plot(*p_nuc, '*', ms=17, color=C_NUC, zorder=7)
-    ax.text(p_nuc[0] + 0.02, p_nuc[1] - 0.15,
+    ax.text(p_nuc[0] + 0.02, p_nuc[1] - 0.10,
             r"$k_\mathrm{nuc} \propto D_\mathrm{surf}"
             r"\langle (n - n_\mathrm{thr})^{n_H} \rangle_+$",
             ha="center", va="top", fontsize=FS, color=C_NUC, zorder=7)
@@ -420,14 +421,14 @@ def draw_schematic(
     bound_pts = np.array([pt(a) for a in bound_angles])
     ax.plot(bound_pts[:, 0], bound_pts[:, 1],
             color=C_SURF, lw=5.0, solid_capstyle="round", zorder=5)
-    ax.plot(*bound_pts[0], 'o', ms=9, color="#3a6ea8", zorder=6)
+    ax.plot(*bound_pts[0], '*', ms=14, color=C_NUC, zorder=6)
 
     tip_b  = bound_pts[-1]
     tang_b = pt(347) - pt(337)
     tang_b /= np.linalg.norm(tang_b)
     ax.annotate("", xy=tip_b + 0.19 * tang_b, xytext=tip_b + 0.02 * tang_b,
                 arrowprops=dict(color=C_SURF, **ARROW_KW), zorder=8)
-    ax.text(tip_b[0] + 0.12, tip_b[1] - 0.28,
+    ax.text(tip_b[0] + 0.04, tip_b[1] - 0.10,
             r"$k_\mathrm{grow}^\mathrm{bound} = k_+^\mathrm{surf}"
             r"\cdot\dfrac{D_\mathrm{surf}}{D_\mathrm{surf}+D_0}$",
             ha="left", va="top", fontsize=FS, color=C_SURF, zorder=7)
@@ -439,9 +440,7 @@ def draw_schematic(
                                 arrowstyle="-|>", mutation_scale=15, lw=2.0),
                 zorder=7)
     ax.text(peel_end[0] + 0.06, peel_end[1],
-            r"$k_\mathrm{off}(L)=k_0^\mathrm{off}\,e^{-\eta_\mathrm{eff}}$"
-            "\n"
-            r"$\times\,\sigma\!\left(\frac{L/R-\ell_\mathrm{thr}}{w_\mathrm{thr}}\right)$",
+            r"$k_\mathrm{off} = e^{-\alpha\eta_\mathrm{eff}}\,\sigma(L)$",
             ha="left", va="center", fontsize=FS, color=C_PEEL, zorder=7)
 
     # 7. free MT (38°, growing toward 50°)
@@ -450,27 +449,27 @@ def draw_schematic(
     free_pts    = np.array([free_anchor + i * 0.14 * free_dir for i in range(7)])
     ax.plot(free_pts[:, 0], free_pts[:, 1],
             color=C_FREE, lw=5.0, solid_capstyle="round", zorder=5)
-    ax.plot(*free_pts[0], 'o', ms=9, color="#3a6ea8", zorder=6)
+    ax.plot(*free_pts[0], '*', ms=14, color=C_NUC, zorder=6)
 
     tip_f = free_pts[-1]
     ax.annotate("", xy=tip_f + 0.19 * free_dir, xytext=tip_f + 0.02 * free_dir,
                 arrowprops=dict(color=C_FREE, **ARROW_KW), zorder=8)
     ax.text(tip_f[0] + 0.12, tip_f[1] + 0.08,
-            r"$k_\mathrm{grow}^\mathrm{free} = k_0^\mathrm{on}\,D_\mathrm{3D}\,c_\mathrm{bulk}$",
+            r"$k_\mathrm{grow}^\mathrm{free} = k_0^\mathrm{on}\,D_\mathrm{3D}\,c_\mathrm{dilute}$",
             ha="left", va="bottom", fontsize=FS, color=C_FREE, zorder=7)
 
     # legend
     legend_elements = [
         mpatches.Patch(color=C_SURF,  label="Surface-bound MT"),
-        mpatches.Patch(color=C_FREE,  label="Free (escaped) MT"),
+        mpatches.Patch(color=C_FREE,  label="Free growing MT"),
         mpatches.Patch(color=C_NUC,   label="Nucleation site"),
-        mpatches.Patch(color=C_ADS,   label="Adsorption from bulk"),
+        mpatches.Patch(color=C_ADS,   label="Adsorption"),
         mpatches.Patch(color=C_DIFF,  label="Surface diffusion"),
-        mpatches.Patch(color=C_PEEL,  label="Tip detachment (peeling)"),
+        mpatches.Patch(color=C_PEEL,  label="Tip detachment"),
     ]
-    ax.legend(handles=legend_elements, loc="lower left",
-              fontsize=FS - 1, framealpha=0.93, edgecolor="#aaaaaa",
-              bbox_to_anchor=(-0.04, -0.04))
+    ax.legend(handles=legend_elements, loc="lower right",
+              fontsize=FS, framealpha=0.93, edgecolor="#aaaaaa",
+              bbox_to_anchor=(1.18, -0.04))
 
     fig.savefig(out_path, bbox_inches="tight", dpi=dpi)
 

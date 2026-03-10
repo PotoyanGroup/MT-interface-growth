@@ -16,6 +16,13 @@ dependencies = [
     "Pillow>=9.0",
 ]
 
+[project.optional-dependencies]
+pyvista = [
+    "pyvista>=0.43",
+    "imageio>=2.28",
+    "imageio-ffmpeg>=0.4",
+]
+
 [project.urls]
 Repository = "https://github.com/YOUR_ORG/mttoy"
 
