@@ -23,7 +23,7 @@ class Params:
     #                (Kramers barrier). Both reflect the same molecular quantity —
     #                the density/strength of IDP-tubulin contacts at the interface.
     R:       float = 8.0    # droplet radius
-    c_bulk:  float = 5.0    # bulk tubulin concentration
+    c_dilute:  float = 5.0    # dilute-phase tubulin concentration
 
     # ── Surface tubulin field ────────────────────────────────────
     n_max:        float = 80.0   # surface saturation density (Langmuir)
@@ -95,7 +95,7 @@ def k_on_3D(p: Params) -> float:
 
 def n_eq(p: Params) -> float:
     """Langmuir equilibrium surface density."""
-    return p.n_max * p.c_bulk / (p.Kd_bulk + p.c_bulk)
+    return p.n_max * p.c_dilute / (p.Kd_bulk + p.c_dilute)
 
 
 def k_off(p: Params, L: float) -> float:
@@ -345,14 +345,14 @@ def grow_rate(st: State, mt: MT) -> float:
     where sat = D_surf / (D_surf + D0_grow)
 
     Free tip:
-        k_on_3D * c_bulk
+        k_on_3D * c_dilute
     Free tips are no longer throttled by surface viscosity.
     Once detached, they polymerize from bulk.
     """
     p = st.droplet.params
     if mt.tip_bound:
         return p.k_plus_surf * bound_growth_sat(p)
-    return k_on_3D(p) * p.c_bulk
+    return k_on_3D(p) * p.c_dilute
 
 
 # ════════════════════════════════════════════════════════════════
@@ -567,7 +567,7 @@ def _record(st: State, records: List[dict], t_sample: float) -> None:
         t              = float(t_sample),
         eta_eff        = float(p.eta_eff),
         R              = float(p.R),
-        c_bulk         = float(p.c_bulk),
+        c_dilute       = float(p.c_dilute),
         D_surf         = float(D_surf(p)),
         k_ads          = float(k_ads(p)),
         k_off_at_L0    = float(k_off(p, 0.0)),

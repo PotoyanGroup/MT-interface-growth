@@ -31,7 +31,7 @@ pip install -e .
 ```python
 from mttoy import Params, run_simulation
 
-p = Params(name="RGRGG", eta_eff=10.0, c_bulk=15.0)
+p = Params(name="RGRGG", eta_eff=10.0, c_dilute=15.0)
 out = run_simulation(p, T_end=2000, seed=42)
 print(out["metrics"].tail())
 ```

@@ -11,7 +11,7 @@ from .core import Params, run_simulation
 
 def run_point(
     base_params: Params,
-    c_bulk: float,
+    c_dilute: float,
     eta_eff: float,
     seeds: Sequence[int] = (1, 2, 3),
     T_end: float = 3600.0,
@@ -26,7 +26,7 @@ def run_point(
     base = asdict(base_params)
     for sd in seeds:
         d = dict(base)
-        d["c_bulk"] = float(c_bulk)
+        d["c_dilute"] = float(c_dilute)
         d["eta_eff"] = float(eta_eff)
         d["name"] = base.get("name", "cond")
 

@@ -182,7 +182,7 @@ def render_state(
             f"{p.name}\n"
             f"t={st.t/60:.1f} min  MTs={len(st.mts)}  "
             f"bound={n_bound}  esc={n_escaped}\n"
-            f"η={p.eta_eff:.2f}  c={p.c_bulk:.1f}  "
+            f"η={p.eta_eff:.2f}  c={p.c_dilute:.1f}  "
             f"n_surf={mean_surf:.1f}",
             fontsize=8,
         )
